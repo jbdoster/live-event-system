@@ -1,0 +1,15 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../../.generated/prisma/rentals"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_RENTALS_URL")
+}
+
+model reservations {
+  id    String   @id(map: "reservations_pk") @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  start DateTime @db.Timestamp(6)
+  end   DateTime @db.Timestamp(6)
+}

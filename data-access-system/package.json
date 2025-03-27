@@ -1,0 +1,34 @@
+{
+	"dependencies": {
+		"@prisma/client": "^6.5.0",
+		"@types/node": "^22.13.11"
+	},
+	"devDependencies": {
+		"@openapitools/openapi-generator-cli": "^2.18.4",
+		"nodemon": "^3.1.9",
+		"openapi-typescript": "^7.6.1",
+		"prisma": "^6.5.0",
+		"redoc-cli": "^0.13.21",
+		"ts-node": "^10.9.2",
+		"typescript": "^5.8.2"
+	},
+	"scarfSettings": {
+		"enabled": false
+	},
+	"scripts": {
+		"build": "tsc",
+		"documentation:generate": "redoc-cli bundle -o index.html ./open-api.schema.yaml",
+		"orm:generate:accounts": "prisma generate --schema ./configuration/orm/schema.accounts.prisma",
+		"orm:generate:cars": "prisma generate --schema ./configuration/orm/schema.cars.prisma",
+		"orm:generate:event_server": "prisma generate --schema ./configuration/orm/schema.event_server.prisma",
+		"orm:generate:rentals": "prisma generate --schema ./configuration/orm/schema.rentals.prisma",
+		"orm:generate": "pnpm orm:generate:accounts && pnpm orm:generate:cars && pnpm orm:generate:event_server && pnpm orm:generate:rentals",
+		"orm:pull:accounts": "prisma db pull --schema ./configuration/orm/schema.accounts.prisma",
+		"orm:pull:cars": "prisma db pull --schema ./configuration/orm/schema.cars.prisma",
+		"orm:pull:event_server": "prisma db pull --schema ./configuration/orm/schema.event_server.prisma",
+		"orm:pull:rentals": "prisma db pull --schema ./configuration/orm/schema.rentals.prisma",
+		"orm:pull": "pnpm orm:pull:accounts && pnpm orm:pull:cars && pnpm orm:pull:event_server && pnpm orm:pull:rentals",
+		"schema:generate": "npx openapi-typescript ./open-api.schema.yaml -o ./.generated/open-api/schema.d.ts",
+		"monitor": "nodemon -w src src/index.ts"
+	}
+}

@@ -1,0 +1,80 @@
+openapi: 3.1.0
+info:
+  title: Data Access API
+  summary: The only server that can touch databases in the system.
+servers:
+  - url: https://localhost:8081
+    description: a
+  - url: https://localhost:8082
+    description: a
+  - url: https://localhost:8083
+    description: a
+paths:
+  /event_server:
+    summary: a
+    description: a
+    parameters:
+    - name: operation
+      in: query
+      required: true
+      description: a
+      schema:
+        type: string
+    - name: table
+      in: query
+      required: true
+      description: a
+      schema:
+        type: string
+    get:
+      tags: ["event_system"]
+      summary: a
+      description: a
+      operationId: event_server
+      # parameters:
+      # - name: database
+      #   in: path
+      #   required: true
+      #   description: a
+      #   schema:
+      #     type: string
+      # - name: operation
+      #   in: path
+      #   required: true
+      #   description: a
+      #   schema:
+      #     type: string
+      # - name: table
+      #   in: path
+      #   required: true
+      #   description: a
+      #   schema:
+      #     type: string
+      responses:
+        '200':
+          description: a
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  event_key:
+                    type: string
+                  id:
+                    type: string
+                  required:
+                    type: boolean
+                  event_property_data_type:
+                    type: string
+                  number_value_minimum:
+                    type: string
+                  number_value_maximum:
+                    type: string
+                  string_length_maximum:
+                    type: string
+                  regular_expression_match:
+                    type: string
+                  version:
+                    type: number
+                  event_property_key:
+                    type: string

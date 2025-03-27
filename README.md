@@ -23,15 +23,20 @@ It was written according to the [Internet Engineering Task Force (IETF) RFC-6455
 
 It is awesome.
 
-# Install Dependencies
+# Architecture and Design
+![System Architecture Diagram](./system-architecture-diagram.png "System Architecture Diagram")
+
+# Contributing (TBD)
+
+## Install Dependencies
 (TBD)
 
-# Building the Projects
+## Building the Projects
 (TBD)
 
-# Running the tests
+## Running the tests
 (TBD)
 
-## Regression/Smoke Tests
-## Unit Tests
-## End to End Tests
+### Regression/Smoke Tests
+### Unit Tests
+### End to End Tests

@@ -1,0 +1,30 @@
+{
+	"dependencies": {
+		"@prisma/client": "^6.5.0",
+		"@types/node": "^22.13.11"
+	},
+	"devDependencies": {
+		"@openapitools/openapi-generator-cli": "^2.18.4",
+		"nodemon": "^3.1.9",
+		"openapi-typescript": "^7.6.1",
+		"prisma": "^6.5.0",
+		"redoc-cli": "^0.13.21",
+		"ts-node": "^10.9.2",
+		"typescript": "^5.8.2"
+	},
+	"scarfSettings": {
+		"enabled": false
+	},
+	"scripts": {
+		"build": "tsc",
+		"documentation:generate": "redoc-cli bundle -o index.html ./open-api.schema.yaml",
+		"orm:generate:event_server": "prisma generate --schema schema.event_server.prisma",
+		"orm:generate:users": "prisma generate --schema schema.users.prisma",
+		"orm:generate": "pnpm orm:generate:event_server && pnpm orm:generate:users",
+		"orm:pull:event_server": "prisma db pull --schema ./schema.event_server.prisma",
+		"orm:pull:users": "prisma db pull --schema ./schema.users.prisma",
+		"orm:pull": "pnpm orm:pull:event_server && pnpm orm:pull:users",
+		"schema:generate": "npx openapi-typescript ./open-api.schema.yaml -o ./.generated/open-api/schema.d.ts",
+		"monitor": "nodemon -w src src/index.ts"
+	}
+}
