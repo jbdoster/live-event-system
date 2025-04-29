@@ -26,6 +26,61 @@ It is awesome.
 # Architecture and Design
 ![System Architecture Diagram](./system-architecture-diagram.png "System Architecture Diagram")
 
+### Data Access Layer
+
+The "Data Warehouse" is just a database with the [Postgres Foreign Data Wrapper (FDW)](https://www.postgresql.org/docs/current/postgres-fdw.html) configured.
+
+This way we can scale with a business by breaking different parts of it into different databases and have the warehouse join them all in 1 database using foreign tables.
+
+There are 2 categories that databases belong to:
+1. System
+
+    State related to system configurations like jobs subscribing to events and event validation rules.
+
+2. Product Services
+
+    State related to each micro-service.
+    
+    Each micro-service will have it's own database.
+
+
+<details>
+<summary>Example: Creating Postgres Foreign Data Wrapper (FDW)</summary>
+
+```
+-- Create remote schema to match foreign schema.
+-- Set the search path to the remote schema created.
+set search_path to web_socket_event_system_events;
+
+-- Now the extension will be created in the remote schema just created.
+create extension if not exists postgres_fdw;
+
+CREATE SERVER gateway_event_server
+FOREIGN DATA WRAPPER postgres_fdw
+OPTIONS (host 'localhost', dbname 'web_socket_event_system', port '5432');
+
+CREATE USER MAPPING FOR admin
+SERVER gateway_event_server
+OPTIONS (user 'admin', password 'password');
+
+ -- Create whatever enums (types)/functions exist in the foreign database
+ -- within this remote database
+CREATE TYPE web_socket_event_system_events.event_label AS ENUM ('update_user_profile');
+
+IMPORT FOREIGN SCHEMA web_socket_event_system_events
+FROM SERVER gateway_event_server
+INTO web_socket_event_system_events;
+
+select * from web_socket_event_system_events.rules;
+
+-- View all foreign servers.
+-- select * from pg_foreign_server
+
+```
+</details>
+<br/>
+<br/>
+
 # Contributing (TBD)
 
 ## Install Dependencies

@@ -43,11 +43,11 @@ export default (
                 rule => {
                     const value = message.data[propertyKey];
                     const dataType = typeof value;
+                    const regularExpression = rule.regular_expression_match;
 
                     if (rule.event_property_data_type !== dataType) {
                         throw new Error(`Incorrect data type: ${message.eventKey} ${propertyKey} required: ${rule.event_property_data_type} actual: ${dataType}`);
                     }
-
 
                     if (dataType === "number") {
                         if ((value as number) < (rule?.number_value_minimum as number)) {
@@ -63,13 +63,15 @@ export default (
                             throw new Error(`Maximum character length exceeded ${message.eventKey} ${propertyKey} minimum: ${rule.number_value_minimum} actual: ${value}`);
                         }
                     }
+
+                    if (
+                        regularExpression &&
+                        !(new RegExp(regularExpression).test(value as string))
+                    ) {
+                        throw new Error("Improper format")
+                    }    
                 }
             )
         }
     )
-    // rules.forEach(
-    //     rule => {
-    //         const rulesByProperty = rule
-    //     }
-    // );
 }

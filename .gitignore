@@ -28,10 +28,10 @@
 !clients/user-profile-spa/vite.config.local.js
 
 !services/
-!services/users/
-!services/users/profile/
-!services/users/profile/src
-!services/users/profile/src/**/*
+!services/rentals/
+!services/rentals/request/
+!services/rentals/request/src
+!services/rentals/request/src/**/*
 
 !system/
 !system/event-server
@@ -60,3 +60,10 @@
 !data-access-system/src/**/*
 
 !example-micro-service
+
+!packages
+!packages/index.js
+!packages/sql-query-builder/
+!packages/sql-query-builder/**/*
+packages/sql-query-builder/node_modules
+packages/sql-query-builder/*.yaml

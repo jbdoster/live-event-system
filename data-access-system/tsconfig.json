@@ -10,5 +10,6 @@
     "strict": true,
     "sourceMap": true,
     "target": "es2016",
+    "types": ["node"]
   },
 }

@@ -3,31 +3,19 @@ import { IncomingMessage } from "http";
 import { Types } from "..";
 
 type Method = "GET" | "POST";
+type Path  = "/documentation" | "/query";
 
 export default class {
     static method(request: IncomingMessage): Method {
         return request.method as Method;
     }
 
-    static isDocumentation(request: IncomingMessage): boolean {
+    static path(request: IncomingMessage): Path {
         const parameters = new URL(`http://host${request.url}`);
-        return parameters.pathname === "/documentation";
+        return parameters.pathname as Path;
     }
 
-    static argsGet(request: IncomingMessage): Types.Args {
-        const parameters = new URL(`http://host${request.url}`);
-        const database = parameters.pathname.replace("/", "");
-        const args = {
-            database,
-        } as Types.Args;
-        parameters.searchParams.forEach(
-            (value, key) => (args[key] = value)
-        )
-        console.log(parameters);
-        return args;
-    }
-
-    static argsPost(
+    static args(
         body: string,
         request: IncomingMessage,
     ): Types.Args {

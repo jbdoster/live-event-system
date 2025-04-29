@@ -1,6 +1,16 @@
-import http from "http";
+import { readFileSync } from "fs";
+import https from "https";
+import { join } from "path";
 
-http.createServer(function (req, res) {
+const options = {
+    key: readFileSync(join(process.cwd(), "keys", "private-key.pem")),
+    cert: readFileSync(join(process.cwd(), "keys", "certificate.pem")),
+    rejectUnauthorized: process.env.HOST !== "local",
+};
+
+https.createServer(
+    options,
+    function (req, res) {
     console.log("Request: ", req.method, req.url, req.headers);
     let body = "";
     req.on('readable', () => {
@@ -36,6 +46,15 @@ http.createServer(function (req, res) {
             res.end();
             return;
         }
+
+        res.writeHead(
+            200,
+            {
+                "content-type": "application/json",
+            },
+        );
+        res.write(JSON.stringify({}));
+        res.end();
 
         // try {
         //     new validations.Required(args);

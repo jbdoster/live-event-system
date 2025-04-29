@@ -4,48 +4,36 @@ import { IncomingMessage, ServerResponse } from "http";
 import { readFileSync } from "fs";
 import { join } from "path";
 
-import { databases } from "./core/client"
+import { Generator, Wrapper } from "./core/client"
 
 import { request, response, validations } from "./core";
 
 import { Types } from "./core"
 
-const getRoutine = async (
+const routine = async (
     args: Types.Args,
     res: ServerResponse<IncomingMessage>,
 ) => {
     try {
         new validations.Arguments(args);
-        new validations.Existence(args);
     }
     catch (error: any) {
         response.Writer.clientError(res, error.message);
         return;
     }
 
-    const accessor = databases[args.database][args.table];
-    if (!accessor) {
-        response.Writer.serverError(res);
+    const statement = Generator(args as any);
+
+    let rows;
+    try {
+        rows = await Wrapper.query(statement);
+    }
+    catch (error: any) {
+        response.Writer.clientError(res, error?.message);
         return;
     }
 
-    try {
-        const dataAccessObject = await accessor[args.operation]({
-            filter: args.filter,
-        });
-        response.Writer.success(dataAccessObject, res);
-    }
-    catch (error: any) {
-        console.error(error.message);
-        response.Writer.serverError(res);
-    }
-}
-
-const postRoutine = async (
-    args: Types.Args,
-    res: ServerResponse<IncomingMessage>,  
-) => {
-
+    response.Writer.success(rows, res);
 }
 
 const options = {
@@ -60,15 +48,15 @@ https.createServer(
     console.log("Request: ", req.method, req.url, req.headers);
 
     const method = request.Parser.method(req);
-    const isDocumentation = request.Parser.isDocumentation(req);
-    if (isDocumentation) {
+    const path = request.Parser.path(req);
+    if (path === "/documentation") {
       response.Writer.documentation(res);
     }
-    else if (method === "GET") {
-        const args = request.Parser.argsGet(req);
-        getRoutine(args, res);        
+    else if (method !== "POST") {
+        console.warn("Method not Post: ", method);
+        response.Writer.clientError(res, "Bad request.");
     }
-    else if (method === "POST") {
+    else {
         let body = "";
         req.on('readable', () => {
             const buffer = req.read();
@@ -86,14 +74,14 @@ https.createServer(
             let args: Types.Args;
     
             try {
-                args = request.Parser.argsPost(body, req);
+                args = request.Parser.args(body, req);
             }
             catch(error: any) {
                 response.Writer.clientError(res, "Request body cannot be parsed.");
                 return;
             }
 
-            postRoutine(args, res);
+            routine(args, res);
         });
 
         req.on("error", (error) => {
@@ -102,6 +90,7 @@ https.createServer(
         })
     }
 })
-.listen(8083).on("listening", () => {
+.listen(8083)
+.on("listening", () => {
     console.log("Server listening: 8083.")
 });

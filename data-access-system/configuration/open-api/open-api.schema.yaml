@@ -1,6 +1,6 @@
 openapi: 3.0.3
 info:
-  title: Data Access Layer API
+  title: Data Access API
   version: 1.0.0
 paths:
   /query:
@@ -14,11 +14,9 @@ paths:
               type: object
               required:
                 - columns
-                - joins
                 - schema
                 - operation
                 - table
-                - where
               properties:
                 columns:
                   type: array

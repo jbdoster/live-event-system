@@ -14,16 +14,15 @@ export const fetch = async () => {
   process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
   const client = createClient<paths>({ baseUrl: "https://localhost:8083" });
-
   const {
     data,
     error,
-  } = await client.GET("/event_server", {
-    params: {
-      query: {
-          operation: "readAll",
-          table: "subscriptions",
-      },
+  } = await client.POST("/query", {
+    body: {
+      "columns": ["*"],
+      "schema": "web_socket_event_system_events",
+      "operation": "SELECT",
+      "table": "subscriptions",
     },
   });
 

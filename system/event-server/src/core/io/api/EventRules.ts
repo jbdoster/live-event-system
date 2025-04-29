@@ -26,12 +26,12 @@ export const fetch = async () => {
   const {
     data,
     error,
-  } = await client.GET("/event_server", {
-    params: {
-      query: {
-          operation: "readAll",
-          table: "rules",
-      },
+  } = await client.POST("/query", {
+    body: {
+      "columns": ["*"],
+      "schema": "web_socket_event_system_events",
+      "operation": "SELECT",
+      "table": "rules",
     },
   });
 
