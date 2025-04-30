@@ -1,0 +1,11 @@
+{
+	"devDependencies": {
+		"@types/node": "22.13.11",
+		"typescript": "5.8.2"
+	},
+	"scripts": {
+		"build": "tsc"
+	},
+	"main": "build/index.js",
+	"name": "@astrolabz/https-server"
+}

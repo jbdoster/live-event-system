@@ -1,58 +1,93 @@
+# services:
+#   server:
+#     build: ./server
+#     container_name: server
+#     networks:
+#       - db
+#     volumes:
+#       - "./server/src:/app/src"
+#   # server:
+#   #   build: ./server
+#   #   command: pnpm orm:pull && pnpm orm:generate && pnpm dev
+#   #   container_name: server
+#   #   develop:
+#   #     watch:
+#   #       - action: sync
+#   #         path: .
+#   #         target: /src
+#   #         ignore:
+#   #           - build/
+#   #           - node_modules/
+#   #       - action: rebuild
+#   #         path: package.json
+#   #   networks:
+#   #     - db
+
+#   db:
+#     container_name: postgres
+#     image: postgres
+#     environment:
+#       POSTGRES_USER: admin
+#       POSTGRES_PASSWORD: password
+#       PGDATA: /data/postgres
+#       POSTGRES_DB: web_socket_event_system
+#     volumes:
+#       # - db:/data/postgres
+#       - ./server/migrations/2025-03-16.sql:/docker-entrypoint-initdb.d/init.sql
+#     ports:
+#       - "5432"
+#     networks:
+#       - db
+#     restart: unless-stopped
+#     healthcheck:
+#       test: [ "CMD-SHELL", "pg_isready -d postgres" ]
+#       interval: 30s
+#       timeout: 10s
+#       retries: 5
+
+# networks:
+#   db:
+#     driver: bridge
+#   internal:
+#     ipam:
+#       driver: default
+#       config:
+#           - subnet: 192.168.0.0/24
+
+# volumes:
+#   db:
+
 services:
-  server:
-    build: ./server
-    container_name: server
-    networks:
-      - db
-    volumes:
-      - "./server/src:/app/src"
-  # server:
-  #   build: ./server
-  #   command: pnpm orm:pull && pnpm orm:generate && pnpm dev
-  #   container_name: server
-  #   develop:
-  #     watch:
-  #       - action: sync
-  #         path: .
-  #         target: /src
-  #         ignore:
-  #           - build/
-  #           - node_modules/
-  #       - action: rebuild
-  #         path: package.json
-  #   networks:
-  #     - db
 
-  db:
-    container_name: postgres
-    image: postgres
-    environment:
-      POSTGRES_USER: admin
-      POSTGRES_PASSWORD: password
-      PGDATA: /data/postgres
-      POSTGRES_DB: web_socket_event_system
-    volumes:
-      # - db:/data/postgres
-      - ./server/migrations/2025-03-16.sql:/docker-entrypoint-initdb.d/init.sql
+  # PUBLIC
+  react-single-page-application:
+    image: node:alpine3.20
+    container_name: react-single-page-application
+    # context: ./clients/react-single-page-application
+    working_dir: /app
     ports:
-      - "5432"
-    networks:
-      - db
-    restart: unless-stopped
-    healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -d postgres" ]
-      interval: 30s
-      timeout: 10s
-      retries: 5
+      - "8082:8082"
+    # command: sh -c "adduser -h . -s /bin/sh -u 1001 -D app && \
+    #                 npm install -g pnpm && \
+    #                 chown -R app:app /app && \
+    #                 su app -c 'pnpm install && pnpm dev:local'"
+    command: sh -c "\
+                npm install -g pnpm && \
+                pnpm install && \
+                pnpm dev:local"
+    volumes:
+      - ./clients/react-single-page-application:/app
+    environment:
+      - NODE_ENV=development
+    env_file:
+      - ./clients/react-single-page-application/.env
 
-networks:
-  db:
-    driver: bridge
-  internal:
-    ipam:
-      driver: default
-      config:
-          - subnet: 192.168.0.0/24
-
-volumes:
-  db:
+  # PRIVATE
+  identity-server:
+    image: quay.io/keycloak/keycloak:26.2.1
+    ports:
+      - "8080:8080"
+    environment:
+      KC_BOOTSTRAP_ADMIN_USERNAME: admin
+      KC_BOOTSTRAP_ADMIN_PASSWORD: admin
+    command: start-dev

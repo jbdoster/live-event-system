@@ -16,22 +16,29 @@
 !tsconfig.json
 
 !clients/
-!clients/user-profile-spa/
-!clients/user-profile-spa
-!clients/user-profile-spa/eslint.config.js
-!clients/user-profile-spa/index.html
-!clients/user-profile-spa/package.json
-!clients/user-profile-spa/public
-!clients/user-profile-spa/public/*
-!clients/user-profile-spa/src
-!clients/user-profile-spa/src/**/*
-!clients/user-profile-spa/vite.config.local.js
+!clients/react-single-page-application/
+!clients/react-single-page-application
+!clients/react-single-page-application/eslint.config.js
+!clients/react-single-page-application/index.html
+!clients/react-single-page-application/package.json
+!clients/react-single-page-application/public
+!clients/react-single-page-application/public/*
+!clients/react-single-page-application/src
+!clients/react-single-page-application/src/**/*
+!clients/react-single-page-application/vite.config.local.js
 
-!services/
-!services/rentals/
-!services/rentals/request/
-!services/rentals/request/src
-!services/rentals/request/src/**/*
+!system/services/
+!system/services/identity/
+!system/services/identity/users/
+!system/services/identity/users/create/
+!system/services/identity/users/create/src
+!system/services/identity/users/create/src/**/*
+
+!system/identity-server/
+!system/identity-server/src
+!system/identity-server/src/**/*
+!system/identity-server/migrations
+!system/identity-server/migrations/**/*
 
 !system/
 !system/event-server
@@ -44,26 +51,18 @@
 !system/event-server/migrations
 !system/event-server/migrations/**/*
 
-!system/auth-server/
-!system/auth-server/src
-!system/auth-server/src/**/*
-!system/auth-server/migrations
-!system/auth-server/migrations/**/*
-
-!data-access-system/
-!data-access-system/
-!data-access-system/configuration
-!data-access-system/configuration/**/*
-!data-access-system/migrations
-!data-access-system/migrations/**/*
-!data-access-system/src
-!data-access-system/src/**/*
+!system/data-access/
+!system/data-access/
+!system/data-access/configuration
+!system/data-access/configuration/**/*
+!system/data-access/migrations
+!system/data-access/migrations/**/*
+!system/data-access/src
+!system/data-access/src/**/*
 
 !example-micro-service
 
 !packages
-!packages/index.js
-!packages/sql-query-builder/
-!packages/sql-query-builder/**/*
-packages/sql-query-builder/node_modules
-packages/sql-query-builder/*.yaml
+!packages/https-server
+!packages/https-server/src
+!packages/https-server/src/**/*
